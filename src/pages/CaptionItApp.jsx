@@ -9,6 +9,7 @@ export default function CaptionItApp() {
   const [imagePreview, setImagePreview] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [results, setResults] = useState(null);
 
   const handleImageUpload = (file) => {
     setImageFile(file);
@@ -19,18 +20,42 @@ export default function CaptionItApp() {
     reader.readAsDataURL(file);
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      // Prefer sending image as base64 if available in preview
+      // imagePreview is a data URL (data:mime;base64,XXXX)
+      let imageUrl = null;
+      let imageBase64 = null;
+      if (imagePreview && imagePreview.startsWith("data:")) {
+        const base64 = imagePreview.split(",")[1];
+        imageBase64 = base64;
+      }
+
+      const resp = await fetch("http://localhost:5050/api/generate-caption", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageUrl, imageBase64 }),
+      });
+      const json = await resp.json();
+      if (!resp.ok || !json?.success) {
+        throw new Error(json?.message || "Failed to generate captions");
+      }
+      setResults(json.data);
       setShowResults(true);
-    }, 3000);
+    } catch (e) {
+      console.error(e);
+      alert(e.message || "Something went wrong generating captions.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleBack = () => {
     setShowResults(false);
     setImageFile(null);
     setImagePreview(null);
+    setResults(null);
   };
 
   return (
@@ -79,7 +104,7 @@ export default function CaptionItApp() {
             onGenerate={handleGenerate}
           />
         ) : (
-          <CaptionResults onBack={handleBack} />
+          <CaptionResults onBack={handleBack} results={results} />
         )}
       </div>
 

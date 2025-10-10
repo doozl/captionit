@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Copy, Check } from "lucide-react";
 import Toast from "./Toast";
-import { MOCK_CAPTIONS } from "../constants/captions";
 
-const CaptionResults = ({ onBack }) => {
+const CaptionResults = ({ onBack, results }) => {
   const [toast, setToast] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
 
@@ -36,9 +35,9 @@ const CaptionResults = ({ onBack }) => {
       </motion.button>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {MOCK_CAPTIONS.map((category, idx) => (
+        {(results?.vibes || []).map((category, idx) => (
           <motion.div
-            key={category.id}
+            key={category.id || idx}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1, duration: 0.5 }}
@@ -48,12 +47,13 @@ const CaptionResults = ({ onBack }) => {
             <div className="flex items-center gap-3 mb-4">
               <span className="text-3xl">{category.emoji}</span>
               <h3 className="text-xl font-bold text-gray-800">
-                {category.title}
+                {category.title || "Curated Captions"}
               </h3>
             </div>
             <div className="space-y-3">
               {category.captions.map((caption) => {
-                const uniqueId = `${category.id}-${caption.id}`;
+                const catKey = category.id || idx;
+                const uniqueId = `${catKey}-${caption.id}`;
                 return (
                   <motion.div
                     key={caption.id}
