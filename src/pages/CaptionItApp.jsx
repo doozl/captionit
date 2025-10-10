@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import UploadBox from "../components/UploadBox";
 import CaptionResults from "../components/CaptionResults";
 import LoadingOverlay from "../components/LoadingOverlay";
+import { ENDPOINTS } from "../service/contant";
 
 export default function CaptionItApp() {
   const [imageFile, setImageFile] = useState(null);
@@ -32,7 +33,7 @@ export default function CaptionItApp() {
         imageBase64 = base64;
       }
 
-      const resp = await fetch("http://localhost:5050/api/generate-caption", {
+      const resp = await fetch(ENDPOINTS.GENERATE_CAPTION, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ imageUrl, imageBase64 }),
