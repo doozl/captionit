@@ -1,5 +1,7 @@
 # 🖼️ CaptionIt
 
+<img width="1603" height="737" alt="Image" src="https://github.com/user-attachments/assets/68bc7ac0-48bc-4372-ac83-96cd40342085" />
+
 **CaptionIt** lets you upload a photo and instantly get AI-generated captions for social media — fun, catchy, and context-aware.
 
 ## 🚀 Features
