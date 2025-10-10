@@ -10,8 +10,8 @@ const allowedOrigins = [
   "http://localhost:5051",
   "https://doozlai.com",
   "https://www.doozlai.com",
-  "https://caption.doozl.com",
-  "http://caption.doozl.com",
+  "https://caption.doozlai.com",
+  "http://caption.doozlai.com",
 ];
 
 app.use(
