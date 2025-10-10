@@ -29,8 +29,8 @@ npm install
 
 # Run the app
 npm start
-
+```
 
 ## 🧾 License
 MIT © 2025 CaptionIt Team
-```
+
