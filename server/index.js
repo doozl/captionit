@@ -5,6 +5,7 @@ dotenv.config();
 const captionRoutes = require("./routes/captionRoutes");
 
 const app = express();
+
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5051",
@@ -16,17 +17,26 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: function (origin, callback) {
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like curl or Postman)
       if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
+
+      const normalizedOrigin = origin.replace(/\/$/, ""); // remove trailing slash
+      const isAllowed = allowedOrigins.some((allowed) =>
+        normalizedOrigin.startsWith(allowed)
+      );
+
+      if (isAllowed) {
+        callback(null, true);
       } else {
-        return callback(new Error("Not allowed by CORS"));
+        console.warn(`❌ Blocked by CORS: ${origin}`);
+        callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
   })
 );
+
 app.use(express.json({ limit: "10mb" }));
 
 app.get("/", (req, res) => {
@@ -37,4 +47,4 @@ app.get("/", (req, res) => {
 app.use("/api", captionRoutes);
 
 const PORT = process.env.PORT || 5050;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
