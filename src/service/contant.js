@@ -4,7 +4,7 @@ const isLocalhost =
 
 const BASE_URL = isLocalhost
   ? "http://localhost:5050"
-  : "https://captionit-backend.onrender.com";
+  : "https://captionit.onrender.com";
 
 export const ENDPOINTS = {
   GENERATE_CAPTION: `${BASE_URL}/api/generate-caption`,
